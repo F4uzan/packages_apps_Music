@@ -28,6 +28,8 @@ import com.dominionos.music.ui.layouts.fragments.SongsFragment;
 import com.mikepenz.aboutlibraries.Libs;
 import com.mikepenz.aboutlibraries.LibsBuilder;
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
+import com.mikepenz.materialdrawer.AccountHeader;
+import com.mikepenz.materialdrawer.AccountHeaderBuilder;
 import com.mikepenz.materialdrawer.Drawer;
 import com.mikepenz.materialdrawer.DrawerBuilder;
 import com.mikepenz.materialdrawer.model.DividerDrawerItem;
@@ -75,7 +77,6 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.toolbar_menu, menu);
 
         return true;
@@ -121,6 +122,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setDrawer() {
+        AccountHeader headerResult = new AccountHeaderBuilder()
+                .withActivity(this)
+                .withHeaderBackground(R.color.colorPrimary)
+                .build();
+
         PrimaryDrawerItem songs = new PrimaryDrawerItem().withIdentifier(1).withName(R.string.songs).withIcon(GoogleMaterial.Icon.gmd_audiotrack);
         PrimaryDrawerItem albums = new PrimaryDrawerItem().withIdentifier(2).withName(R.string.album).withIcon(GoogleMaterial.Icon.gmd_library_music);
         PrimaryDrawerItem artists = new PrimaryDrawerItem().withIdentifier(3).withName(R.string.artist).withIcon(GoogleMaterial.Icon.gmd_account_circle);
@@ -129,6 +135,7 @@ public class MainActivity extends AppCompatActivity {
 
         final Drawer drawer = new DrawerBuilder()
                 .withActivity(this)
+                .withAccountHeader(headerResult)
                 .withToolbar(toolbar)
                 .withCloseOnClick(true)
                 .addDrawerItems(
@@ -180,7 +187,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onPageSelected(int position) {
-                drawer.setSelectionAtPosition(position);
+                drawer.setSelectionAtPosition(position + 1);
             }
 
             @Override

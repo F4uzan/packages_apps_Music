@@ -6,18 +6,12 @@ public class AlbumListItem {
     private final String name;
     private final String desc;
     private String artString;
-    private final int numOfSongs;
 
-    public AlbumListItem(long id, String name, String desc, String artString, int numOfSongs) {
+    public AlbumListItem(long id, String name, String desc, String artString) {
         this.desc = desc;
         this.id = id;
         this.name = name;
         this.artString = artString;
-        this.numOfSongs = numOfSongs;
-    }
-
-    public int getNumOfSongs() {
-        return numOfSongs;
     }
 
     public long getId() {

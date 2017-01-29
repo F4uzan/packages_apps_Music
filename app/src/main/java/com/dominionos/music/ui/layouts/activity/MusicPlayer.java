@@ -11,7 +11,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
 import android.os.Build;
@@ -51,8 +50,7 @@ public class MusicPlayer extends AppCompatActivity {
     public static final String ACTION_GET_SEEK_VALUE = "gte_seek_value";
     public static final String ACTION_GET_PLAYING_LIST = "get_playing_list";
     public static final String ACTION_GET_PLAYING_DETAIL = "get_playing_detail";
-    private static int mainColor;
-    private static int mainColorAlt;
+    private static int mainColor, mainColorAlt;
     private String songName, songArt;
     private TextView currentTimeHolder, totalTimeHolder;
     private long albumId;
@@ -219,7 +217,14 @@ public class MusicPlayer extends AppCompatActivity {
                     }
                     }
             };
-            Palette.from(BitmapFactory.decodeFile(songArt, options)).generate(paletteListener);
+            try {
+                Palette.from(BitmapFactory.decodeFile(songArt, options)).generate(paletteListener);
+            } catch (IllegalArgumentException ignored) {
+                header.setImageResource(R.drawable.default_artwork_dark);
+                mainColor = ResourcesCompat.getColor(getResources(), R.color.colorPrimary, null);
+                collapsingToolbarLayout.setContentScrimColor(mainColor);
+                collapsingToolbarLayout.setStatusBarScrimColor(getAutoStatColor(mainColor));
+            }
         } else {
             header.setImageResource(R.drawable.default_artwork_dark);
             mainColor = ResourcesCompat.getColor(getResources(), R.color.colorPrimary, null);

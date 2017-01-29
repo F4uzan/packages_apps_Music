@@ -8,7 +8,6 @@ import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -95,11 +94,5 @@ public class ArtistsFragment extends Fragment {
         rv.setLayoutManager(linearLayoutManager);
         rv.setHasFixedSize(true);
         rv.setAdapter(new ArtistAdapter(context, artistList));
-        rv.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-            }
-        });
     }
 }

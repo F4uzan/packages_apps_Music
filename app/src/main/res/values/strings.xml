@@ -36,7 +36,6 @@
     <string name="add_playlist">Create playlist</string>
     <string name="default_duration">00:00</string>
 
-    <!-- Strings imported from Java source files -->
     <!-- DialogPlaylistAdapter -->
     <string name="rename_playlist">Rename playlist</string>
     <string name="playlist_example">e.g. Favourites</string>

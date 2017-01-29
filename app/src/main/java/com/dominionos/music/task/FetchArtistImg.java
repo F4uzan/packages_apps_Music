@@ -6,26 +6,16 @@ import android.graphics.BitmapFactory;
 import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.util.Log;
 
 import com.afollestad.async.Action;
 import com.dominionos.music.R;
 import com.dominionos.music.utils.ArtistImgHandler;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.HttpStatus;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -33,10 +23,19 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+
+import cz.msebera.android.httpclient.HttpResponse;
+import cz.msebera.android.httpclient.NameValuePair;
+import cz.msebera.android.httpclient.client.HttpClient;
+import cz.msebera.android.httpclient.client.entity.UrlEncodedFormEntity;
+import cz.msebera.android.httpclient.client.methods.HttpPost;
+import cz.msebera.android.httpclient.impl.client.DefaultHttpClient;
 
 public class FetchArtistImg {
 
@@ -73,7 +72,7 @@ public class FetchArtistImg {
             @NonNull
             @Override
             public String id() {
-                return name; //some unique Id
+                return name;
             }
 
             @Nullable
@@ -154,54 +153,26 @@ public class FetchArtistImg {
             out.flush();
             out.close();
             return image.getPath();
-        } catch (IOException e) {
+        } catch (IOException | NullPointerException e) {
             e.printStackTrace();
         }
         return null;
     }
 
-    private Bitmap downloadBitmap(String url) {
-        // initialize the default HTTP client object
-        final DefaultHttpClient client = new DefaultHttpClient();
+    private Bitmap downloadBitmap(String urlString) {
 
-        //forming a HttpGet request
-        final HttpGet getRequest = new HttpGet(url);
+        HttpURLConnection connection = null;
         try {
-
-            HttpResponse response = client.execute(getRequest);
-
-            //check 200 OK for success
-            final int statusCode = response.getStatusLine().getStatusCode();
-
-            if (statusCode != HttpStatus.SC_OK) {
-                Log.w("ImageDownloader", "Error " + statusCode +
-                        " while retrieving bitmap from " + url);
-                return null;
-
+            URL url = new URL(urlString);
+            connection = (HttpURLConnection) url.openConnection();
+            InputStream in = new BufferedInputStream(connection.getInputStream());
+            return BitmapFactory.decodeStream(in);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if(connection != null) {
+                connection.disconnect();
             }
-
-            final HttpEntity entity = response.getEntity();
-            if (entity != null) {
-                InputStream inputStream = null;
-                try {
-                    // getting contents from the stream
-                    inputStream = entity.getContent();
-
-                    // decoding stream data back into image Bitmap that android understands
-
-                    return BitmapFactory.decodeStream(inputStream);
-                } finally {
-                    if (inputStream != null) {
-                        inputStream.close();
-                    }
-                    EntityUtils.consume(entity);
-                }
-            }
-        } catch (Exception e) {
-            // You Could provide a more explicit error message for IOException
-            getRequest.abort();
-            Log.e("ImageDownloader", "Something went wrong while" +
-                    " retrieving bitmap from " + url + e.toString());
         }
 
         return null;

@@ -45,7 +45,6 @@ public class AlbumsAdapter extends RecyclerView.Adapter<AlbumsAdapter.SimpleItem
         final ImageView albumArt;
         final View realBackground;
         public final View textHolder;
-        final View mainView;
 
         SimpleItemViewHolder(View view) {
             super(view);
@@ -53,7 +52,6 @@ public class AlbumsAdapter extends RecyclerView.Adapter<AlbumsAdapter.SimpleItem
             albumName = (TextView) view.findViewById(R.id.grid_name);
             albumDesc = (TextView) view.findViewById(R.id.grid_desc);
             albumArt = (ImageView) view.findViewById(R.id.grid_art);
-            mainView = view;
             textHolder = view.findViewById(R.id.text_holder);
             realBackground = view.findViewById(R.id.real_background);
         }

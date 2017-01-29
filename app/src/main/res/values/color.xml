@@ -4,7 +4,6 @@
     <color name="colorPrimary">#ff3e4147</color>
     <color name="colorPrimaryDark">#ff2a2c31</color>
     <color name="colorAccent">#FFD50000</color>
-    <color name="tabInactiveTextColor">@android:color/tab_indicator_text</color>
     <color name="card_background">@color/colorPrimary</color>
     <color name="noti_background">#333333</color>
     <color name="windowBackground">#FFFAFAFA</color>

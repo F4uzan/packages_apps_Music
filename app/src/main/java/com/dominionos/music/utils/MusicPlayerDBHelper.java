@@ -159,7 +159,7 @@ public class MusicPlayerDBHelper extends SQLiteOpenHelper {
         String query = "SELECT  * FROM " + TABLE_PLAYBACK;
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(query, null);
-        SongListItem song = null;
+        SongListItem song;
         if (cursor.moveToFirst()) {
             do {
                 song = getSongFromCursor(cursor);
