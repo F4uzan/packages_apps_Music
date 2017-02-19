@@ -60,7 +60,7 @@
     <string name="song_delete_fail">Failed to delete song</string>
 
     <!-- About screen -->
-    <string name="about_text">Music player based on an older version of @architjn\'s Auro, before everything got broken.</string>
+    <string name="about_text">Based on Auro by @architjn (Before everything broke)</string>
 
     <!-- MusicService -->
     <string name="service_generate_list_warning">The service has not yet built a list of your songs</string>
