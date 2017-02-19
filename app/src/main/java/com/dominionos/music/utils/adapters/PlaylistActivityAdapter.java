@@ -55,28 +55,17 @@ public class PlaylistActivityAdapter extends RecyclerView.Adapter<PlaylistActivi
                 popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
+                        Intent i = new Intent();
                         switch (item.getItemId()) {
                             case R.id.menu_play_next:
-                                Intent i = new Intent();
                                 i.setAction(MusicService.ACTION_PLAY_NEXT);
-                                i.putExtra("songId", data.get(finalPosition).getId());
-                                i.putExtra("songPath", data.get(finalPosition).getPath());
-                                i.putExtra("songName", data.get(finalPosition).getName());
-                                i.putExtra("songDesc", data.get(finalPosition).getDesc());
-                                i.putExtra("songAlbumId", data.get(finalPosition).getAlbumId());
-                                i.putExtra("songAlbumName", data.get(finalPosition).getAlbumName());
+                                i.putExtra("song", data.get(finalPosition));
                                 context.sendBroadcast(i);
                                 return true;
                             case R.id.menu_add_playing:
-                                Intent a = new Intent();
-                                a.setAction(MusicService.ACTION_ADD_SONG);
-                                a.putExtra("songId", data.get(finalPosition).getId());
-                                a.putExtra("songPath", data.get(finalPosition).getPath());
-                                a.putExtra("songName", data.get(finalPosition).getName());
-                                a.putExtra("songDesc", data.get(finalPosition).getDesc());
-                                a.putExtra("songAlbumId", data.get(finalPosition).getAlbumId());
-                                a.putExtra("songAlbumName", data.get(finalPosition).getAlbumName());
-                                context.sendBroadcast(a);
+                                i.setAction(MusicService.ACTION_ADD_SONG);
+                                i.putExtra("song", data.get(finalPosition));
+                                context.sendBroadcast(i);
                                 return true;
                             case R.id.menu_remove_playlist:
                                 MySQLiteHelper helper = new MySQLiteHelper(context);
@@ -117,12 +106,7 @@ public class PlaylistActivityAdapter extends RecyclerView.Adapter<PlaylistActivi
             public void onClick(View v) {
                 Intent a = new Intent();
                 a.setAction(MusicService.ACTION_PLAY_SINGLE);
-                a.putExtra("songId", data.get(finalPosition).getId());
-                a.putExtra("songPath", data.get(finalPosition).getPath());
-                a.putExtra("songName", data.get(finalPosition).getName());
-                a.putExtra("songDesc", data.get(finalPosition).getDesc());
-                a.putExtra("songAlbumId", data.get(finalPosition).getAlbumId());
-                a.putExtra("songAlbumName", data.get(finalPosition).getAlbumName());
+                a.putExtra("song", data.get(finalPosition));
                 context.sendBroadcast(a);
             }
         });

@@ -5,22 +5,21 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.dominionos.music.R;
 import com.dominionos.music.ui.layouts.activity.ArtistActivity;
 import com.dominionos.music.utils.ArtistImgHandler;
+import com.dominionos.music.utils.Utils;
 import com.dominionos.music.utils.items.ArtistListItem;
-import com.makeramen.roundedimageview.RoundedImageView;
 import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView;
-import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Target;
 
 import java.io.File;
 import java.util.List;
@@ -34,21 +33,26 @@ public class ArtistAdapter extends RecyclerView.Adapter<ArtistAdapter.SimpleItem
     @NonNull
     @Override
     public String getSectionName(int position) {
-        return items.get(position).getName().substring(0,1);
+        String character = items.get(position).getName().substring(0, 1);
+        if(character.matches("[a-zA-Z]")) {
+            return items.get(position).getName().substring(0,1);
+        } else {
+            return "\u2605";
+        }
     }
 
 
     final static class SimpleItemViewHolder extends RecyclerView.ViewHolder {
         final TextView artistName;
         final TextView artistDesc;
-        final RoundedImageView artistImg;
+        final ImageView artistImg;
         final View view;
 
         SimpleItemViewHolder(View itemView) {
             super(itemView);
             artistName = (TextView) itemView.findViewById(R.id.artist_name);
             artistDesc = (TextView) itemView.findViewById(R.id.artist_desc);
-            artistImg = (RoundedImageView) itemView.findViewById(R.id.artist_image);
+            artistImg = (ImageView) itemView.findViewById(R.id.artist_image);
             view = itemView;
         }
     }
@@ -75,13 +79,13 @@ public class ArtistAdapter extends RecyclerView.Adapter<ArtistAdapter.SimpleItem
         getArtistImg(holder, position);
 
         if(albumCount == 1 && songCount == 1) {
-            artistItemsCount = (albumCount + " Album • " + songCount + " Song");
-        } else if (albumCount == 1 && songCount != 1) {
-            artistItemsCount = (albumCount + " Album • " + songCount + " Songs");
-        } else if (albumCount != 1 && songCount == 1) {
-            artistItemsCount = (albumCount + " Albums • " + songCount + " Song");
+            artistItemsCount = (albumCount + " " + context.getString(R.string.album) + " • " + songCount + " " + context.getString(R.string.song));
+        } else if (albumCount == 1) {
+            artistItemsCount = (albumCount + " " + context.getString(R.string.album) + " • " + songCount + " " + context.getString(R.string.songs));
+        } else if (songCount == 1) {
+            artistItemsCount = (albumCount + " " + context.getString(R.string.albums) + " • " + songCount + " " + context.getString(R.string.song));
         } else {
-            artistItemsCount = (albumCount + " Albums • " + songCount + " Songs");
+            artistItemsCount = (albumCount + " " + context.getString(R.string.albums) + " • " + songCount + " " + context.getString(R.string.songs));
         }
         holder.artistDesc.setText(artistItemsCount);
 
@@ -104,7 +108,6 @@ public class ArtistAdapter extends RecyclerView.Adapter<ArtistAdapter.SimpleItem
                     ((Activity) context).runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            Picasso.with(context).load(new File(url)).into(holder.artistImg);
                             setImageToView(url, holder);
                         }
                     });
@@ -115,34 +118,13 @@ public class ArtistAdapter extends RecyclerView.Adapter<ArtistAdapter.SimpleItem
             setImageToView(path, holder);
         } else {
             String urlIfAny = imgHandler.getArtistArtWork(items.get(position).getName(), position);
-            if (urlIfAny != null) {
-                setImageToView(urlIfAny, holder);
-            } else {
-                BitmapFactory.Options a = new BitmapFactory.Options();
-                a.inSampleSize = 4;
-                Bitmap b = BitmapFactory.decodeResource(context.getResources(), R.drawable.default_artwork_dark, a);
-                holder.artistImg.setImageBitmap(b);
-            }
+            setImageToView(urlIfAny, holder);
         }
     }
 
     private void setImageToView(String url, final SimpleItemViewHolder holder) {
-        Picasso.with(context).load(new File(url)).into(new Target() {
-            @Override
-            public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-                holder.artistImg.setImageBitmap(bitmap);
-            }
-
-            @Override
-            public void onBitmapFailed(Drawable errorDrawable) {
-
-            }
-
-            @Override
-            public void onPrepareLoad(Drawable placeHolderDrawable) {
-
-            }
-        });
+        int px = Utils.dpToPx(context, 48);
+        Glide.with(context).load(new File(url)).error(R.drawable.default_artwork_dark).centerCrop().override(px, px).into(holder.artistImg);
     }
 
     @Override

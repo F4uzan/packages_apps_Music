@@ -27,12 +27,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
 import com.dominionos.music.R;
 import com.dominionos.music.utils.adapters.AlbumSongAdapter;
 import com.dominionos.music.utils.items.SongListItem;
 import com.dominionos.music.service.MusicService;
 import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView;
-import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -66,7 +66,7 @@ public class AlbumActivity extends AppCompatActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setHomeAsUpIndicator(upButton);
         }
-        final ImageView albumArt = (ImageView) findViewById(R.id.activity_album_art);
+        ImageView albumArt = (ImageView) findViewById(R.id.album_art);
 
         audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
 
@@ -89,16 +89,10 @@ public class AlbumActivity extends AppCompatActivity {
                 null);
         if (cursor != null && cursor.moveToFirst()) {
             String imagePath = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Albums.ALBUM_ART));
-            try {
-                Picasso.with(AlbumActivity.this)
-                        .load(new File(imagePath))
-                        .error(R.drawable.default_artwork_dark)
-                        .into(albumArt);
-            } catch (NullPointerException e) {
-                Picasso.with(AlbumActivity.this).
-                        load(R.drawable.default_artwork_dark)
-                        .into(albumArt);
-            }
+            Glide.with(AlbumActivity.this)
+                    .load(new File(imagePath))
+                    .error(R.drawable.default_artwork_dark)
+                    .into(albumArt);
         }
         if (cursor != null) {
             cursor.close();
@@ -114,10 +108,10 @@ public class AlbumActivity extends AppCompatActivity {
                 int vibrantTitleText;
                 if (vibrantSwatch != null) {
                     vibrantRgb = vibrantSwatch.getRgb();
-                    vibrantTitleText = vibrantSwatch.getBodyTextColor();
+                    vibrantTitleText = vibrantSwatch.getTitleTextColor();
                 } else if (altSwatch != null) {
                     vibrantRgb = altSwatch.getRgb();
-                    vibrantTitleText = altSwatch.getBodyTextColor();
+                    vibrantTitleText = altSwatch.getTitleTextColor();
                 } else {
                     vibrantRgb = ResourcesCompat.getColor(getResources(), R.color.card_background, null);
                     vibrantTitleText = ResourcesCompat.getColor(getResources(), android.R.color.primary_text_dark, null);
@@ -171,16 +165,13 @@ public class AlbumActivity extends AppCompatActivity {
                     (MediaStore.Audio.Media.ALBUM_ID);
             int albumNameColumn = musicCursor.getColumnIndex
                     (MediaStore.Audio.Media.ALBUM);
-            int count = 0;
             do {
-                count++;
                 songList.add(new SongListItem(musicCursor.getLong(idColumn),
                         musicCursor.getString(titleColumn),
                         musicCursor.getString(artistColumn),
                         musicCursor.getString(pathColumn), false,
                         musicCursor.getLong(albumIdColumn),
-                        musicCursor.getString(albumNameColumn),
-                        count));
+                        musicCursor.getString(albumNameColumn)));
             }
             while (musicCursor.moveToNext());
         }

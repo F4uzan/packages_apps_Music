@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -16,6 +17,8 @@ import com.dominionos.music.utils.adapters.PlaylistAdapter;
 import com.dominionos.music.utils.items.Playlist;
 
 import java.util.List;
+
+import uk.co.samuelwall.materialtaptargetprompt.MaterialTapTargetPrompt;
 
 public class PlaylistFragment extends Fragment {
 
@@ -42,11 +45,11 @@ public class PlaylistFragment extends Fragment {
     private void getPlaylistList() {
         MySQLiteHelper helper = new MySQLiteHelper(mainView.getContext());
         List<Playlist> playlistList = helper.getAllPlaylist();
-        playlistList.add(new Playlist(-1, getString(R.string.create_new_playlist)));
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mainView.getContext());
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         linearLayoutManager.scrollToPosition(0);
         rv.setLayoutManager(linearLayoutManager);
+        rv.addItemDecoration(new DividerItemDecoration(rv.getContext(), linearLayoutManager.getOrientation()));
         rv.setHasFixedSize(true);
         rv.setAdapter(new PlaylistAdapter(mainView.getContext(), playlistList));
     }

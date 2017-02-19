@@ -69,7 +69,6 @@ public class SearchActivity extends AppCompatActivity {
                             (MediaStore.Audio.Media.ALBUM_ID);
                     int albumColumn = musicCursor.getColumnIndex
                             (MediaStore.Audio.Media.ALBUM);
-                    int i = 1;
                     do {
                         if(musicCursor.getString(titleColumn).toLowerCase().trim().contains(query.toLowerCase())) {
                             searchResults.add(new SongListItem(musicCursor.getLong(idColumn),
@@ -77,8 +76,7 @@ public class SearchActivity extends AppCompatActivity {
                                     musicCursor.getString(artistColumn),
                                     musicCursor.getString(pathColumn), false,
                                     musicCursor.getLong(albumIdColumn),
-                                    musicCursor.getString(albumColumn), i));
-                            i++;
+                                    musicCursor.getString(albumColumn)));
                         }
                     }
                     while (musicCursor.moveToNext());
@@ -114,7 +112,6 @@ public class SearchActivity extends AppCompatActivity {
                             (MediaStore.Audio.Media.ALBUM_ID);
                     int albumColumn = musicCursor.getColumnIndex
                             (MediaStore.Audio.Media.ALBUM);
-                    int i = 1;
                     do {
                         if(musicCursor.getString(titleColumn).toLowerCase().trim().contains(newText.toLowerCase())) {
                             searchResults.add(new SongListItem(musicCursor.getLong(idColumn),
@@ -122,8 +119,7 @@ public class SearchActivity extends AppCompatActivity {
                                     musicCursor.getString(artistColumn),
                                     musicCursor.getString(pathColumn), false,
                                     musicCursor.getLong(albumIdColumn),
-                                    musicCursor.getString(albumColumn), i));
-                            i++;
+                                    musicCursor.getString(albumColumn)));
                         }
                     }
                     while (musicCursor.moveToNext());
@@ -133,7 +129,12 @@ public class SearchActivity extends AppCompatActivity {
                             return songListItem.getName().compareTo(t1.getName());
                         }
                     });
-                    searchList.setAdapter(new SongsAdapter(SearchActivity.this, searchResults));
+                    SongsAdapter adapter = new SongsAdapter(SearchActivity.this, searchResults);
+                    if(searchList.getAdapter() == null) {
+                        searchList.setAdapter(adapter);
+                    } else {
+                        searchList.swapAdapter(adapter, false);
+                    }
                     musicCursor.close();
                 }
                 return true;

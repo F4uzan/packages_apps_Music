@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <color name="colorPrimary">#ff3e4147</color>
-    <color name="colorPrimaryDark">#ff2a2c31</color>
+    <color name="colorPrimary">#3E4147</color>
+    <color name="colorPrimaryDark">#2A2C31</color>
     <color name="colorAccent">#FFD50000</color>
-    <color name="card_background">@color/colorPrimary</color>
-    <color name="noti_background">#333333</color>
-    <color name="windowBackground">#FFFAFAFA</color>
+    <color name="card_background">@color/colorAccent</color>
+    <color name="window_background">#FFFAFAFA</color>
+    <color name="album_title_text">@android:color/primary_text_dark</color>
+    <color name="album_desc_text">@android:color/secondary_text_dark</color>
+
 </resources>

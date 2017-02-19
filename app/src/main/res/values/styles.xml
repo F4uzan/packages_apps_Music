@@ -8,12 +8,11 @@
         <item name="windowActionBar">false</item>
         <item name="android:windowActionBarOverlay">true</item>
         <item name="windowNoTitle">true</item>
-        <item name="android:windowBackground">@color/windowBackground</item>
+        <item name="android:windowBackground">@color/window_background</item>
         <item name="android:windowActivityTransitions">true</item>
+        <item name="android:windowContentTransitions">true</item>
         <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
         <item name="colorControlNormal">@android:color/primary_text_dark</item>
-        <item name="android:windowEnterTransition">@android:transition/slide_bottom</item>
-        <item name="android:windowExitTransition">@android:transition/slide_bottom</item>
         <item name="material_drawer_selected_text">@color/colorAccent</item>
     </style>
 
@@ -28,6 +27,5 @@
     <style name="AppTheme.BrandedLaunch" parent="AppTheme.Main">
         <item name="android:windowBackground">@drawable/branded_logo</item>
     </style>
-
 
 </resources>

@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 
 import com.dominionos.music.R;
 import com.dominionos.music.utils.SpacesItemDecoration;
+import com.dominionos.music.utils.Utils;
 import com.dominionos.music.utils.adapters.AlbumsAdapter;
 import com.dominionos.music.utils.items.AlbumListItem;
 import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView;
@@ -47,7 +48,6 @@ public class AlbumsFragment extends Fragment {
 
     private void getAlbumList() {
         final ArrayList<AlbumListItem> albumList = new ArrayList<>();
-        System.gc();
         final String orderBy = MediaStore.Audio.Albums.ALBUM;
         Cursor musicCursor = mainView.getContext().getContentResolver().
                 query(MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI, null, null, null, orderBy);
@@ -64,12 +64,12 @@ public class AlbumsFragment extends Fragment {
                     (android.provider.MediaStore.Audio.Albums.NUMBER_OF_SONGS);
             int albumArtColumn = musicCursor.getColumnIndex
                     (android.provider.MediaStore.Audio.Albums.ALBUM_ART);
-            //add albums to list
             do {
                 albumList.add(new AlbumListItem(musicCursor.getLong(idColumn),
                         musicCursor.getString(titleColumn),
                         musicCursor.getString(artistColumn),
-                        musicCursor.getString(albumArtColumn)
+                        musicCursor.getString(albumArtColumn),
+                        musicCursor.getInt(numOfSongsColumn)
                 ));
             }
             while (musicCursor.moveToNext());
@@ -83,13 +83,17 @@ public class AlbumsFragment extends Fragment {
         if (musicCursor != null) {
             musicCursor.close();
         }
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(mainView.getContext(), 2);
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(mainView.getContext(), Utils.calculateNoOfColumns(getContext()));
         gridLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         gridLayoutManager.scrollToPosition(0);
         gv.setLayoutManager(gridLayoutManager);
         gv.addItemDecoration(new SpacesItemDecoration(8, 2));
         gv.setHasFixedSize(true);
-        gv.setAdapter(new AlbumsAdapter(mainView.getContext(), albumList));
+        if(albumList.size() != 0) {
+            gv.setAdapter(new AlbumsAdapter(mainView.getContext(), albumList));
+        } else {
+            getActivity().findViewById(R.id.no_albums).setVisibility(View.VISIBLE);
+        }
 
     }
 }

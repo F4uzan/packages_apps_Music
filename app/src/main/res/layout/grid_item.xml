@@ -37,7 +37,7 @@
                 android:maxLines="1"
                 android:layout_alignParentStart="true"
                 android:layout_alignParentTop="true"
-                android:textColor="@android:color/primary_text_dark"
+                android:textColor="@color/album_title_text"
                 android:textSize="16sp"
                 android:ellipsize="end"/>
 
@@ -48,7 +48,7 @@
                 android:maxLines="1"
                 android:layout_alignParentStart="true"
                 android:layout_alignParentBottom="true"
-                android:textColor="@android:color/secondary_text_dark"
+                android:textColor="@color/album_desc_text"
                 android:textSize="12sp"
                 android:ellipsize="end"/>
         </RelativeLayout>

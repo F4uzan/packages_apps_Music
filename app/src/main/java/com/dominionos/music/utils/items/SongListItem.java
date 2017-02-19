@@ -1,6 +1,8 @@
 package com.dominionos.music.utils.items;
 
-public class SongListItem {
+import java.io.Serializable;
+
+public class SongListItem implements Serializable {
 
     private final long id;
     private final long albumId;
@@ -9,51 +11,44 @@ public class SongListItem {
     private final String path;
     private final String albumName;
     private final Boolean fav;
-    private final int count;
 
     public SongListItem(long id, String name, String desc, String path,
-                        Boolean fav, long albumId, String albumName, int count) {
+                        Boolean fav, long albumId, String albumName) {
         this.desc = desc;
         this.fav = fav;
         this.path = path;
         this.id = id;
         this.name = name;
         this.albumId = albumId;
-        this.count = count;
         this.albumName = albumName;
     }
 
     public long getId() {
-        return this.id;
+        return id;
     }
 
     public String getName() {
-        return this.name;
+        return name;
     }
 
     public String getPath() {
-        return this.path;
+        return path;
     }
 
     public String getAlbumName() {
-        return this.albumName;
+        return albumName;
     }
 
     public String getDesc() {
-        return this.desc;
+        return desc;
     }
 
     public long getAlbumId() {
-        return this.albumId;
+        return albumId;
     }
 
 
     public Boolean getFav() {
-        return this.fav;
+        return fav;
     }
-
-    public int getCount() {
-        return this.count;
-    }
-
 }

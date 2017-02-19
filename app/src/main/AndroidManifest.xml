@@ -24,8 +24,6 @@
                 <category android:name="android.intent.category.APP_MUSIC" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
-            <meta-data android:name="android.app.shortcuts"
-                android:resource="@xml/shortcuts" />
         </activity>
         <activity
             android:name=".ui.layouts.activity.SearchActivity"
@@ -34,14 +32,9 @@
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
-            <meta-data android:name="android.app.shortcuts"
-                android:resource="@xml/shortcuts" />
         </activity>
         <activity
             android:name=".ui.layouts.activity.AlbumActivity"
-            android:theme="@style/AppTheme.Main" />
-        <activity
-            android:name=".ui.layouts.activity.MusicPlayer"
             android:theme="@style/AppTheme.Main" />
         <activity
             android:name=".ui.layouts.activity.PlaylistActivity"

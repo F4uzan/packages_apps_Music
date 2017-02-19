@@ -65,12 +65,7 @@ public class AlbumSongAdapter extends RecyclerView.Adapter<AlbumSongAdapter.Simp
             public void onClick(View v) {
                 Intent a = new Intent();
                 a.setAction(MusicService.ACTION_PLAY_SINGLE);
-                a.putExtra("songId", items.get(finalPosition).getId());
-                a.putExtra("songPath", items.get(finalPosition).getPath());
-                a.putExtra("songName", items.get(finalPosition).getName());
-                a.putExtra("songDesc", items.get(finalPosition).getDesc());
-                a.putExtra("songAlbumId", items.get(finalPosition).getAlbumId());
-                a.putExtra("songAlbumName", items.get(finalPosition).getAlbumName());
+                a.putExtra("song", items.get(finalPosition));
                 context.sendBroadcast(a);
             }
         });
@@ -82,28 +77,17 @@ public class AlbumSongAdapter extends RecyclerView.Adapter<AlbumSongAdapter.Simp
                 popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
+                        Intent i = new Intent();
                         switch (item.getItemId()) {
                             case R.id.menu_play_next:
-                                Intent i = new Intent();
                                 i.setAction(MusicService.ACTION_PLAY_NEXT);
-                                i.putExtra("songId", items.get(finalPosition).getId());
-                                i.putExtra("songPath", items.get(finalPosition).getPath());
-                                i.putExtra("songName", items.get(finalPosition).getName());
-                                i.putExtra("songDesc", items.get(finalPosition).getDesc());
-                                i.putExtra("songAlbumId", items.get(finalPosition).getAlbumId());
-                                i.putExtra("songAlbumName", items.get(finalPosition).getAlbumName());
+                                i.putExtra("song", items.get(finalPosition));
                                 context.sendBroadcast(i);
                                 return true;
                             case R.id.menu_add_playing:
-                                Intent a = new Intent();
-                                a.setAction(MusicService.ACTION_ADD_SONG);
-                                a.putExtra("songId", items.get(finalPosition).getId());
-                                a.putExtra("songPath", items.get(finalPosition).getPath());
-                                a.putExtra("songName", items.get(finalPosition).getName());
-                                a.putExtra("songDesc", items.get(finalPosition).getDesc());
-                                a.putExtra("songAlbumId", items.get(finalPosition).getAlbumId());
-                                a.putExtra("songAlbumName", items.get(finalPosition).getAlbumName());
-                                context.sendBroadcast(a);
+                                i.setAction(MusicService.ACTION_ADD_SONG);
+                                i.putExtra("song", items.get(finalPosition));
+                                context.sendBroadcast(i);
                                 return true;
                             case R.id.menu_add_playlist:
                                 addToPlaylist(finalPosition);

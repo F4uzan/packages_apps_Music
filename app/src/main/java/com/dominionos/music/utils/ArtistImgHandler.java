@@ -52,13 +52,6 @@ public abstract class ArtistImgHandler extends SQLiteOpenHelper {
                 removeArtistImgFromDB(name);
         } else {
             new FetchArtistImg(context, name, randomNumbers[pos], this);
-//            new FetchArtistArtWork(context, name, randomNumbers[pos]) {
-//                @Override
-//                public void onDownloadComplete(String url) {
-//                    updateArtistArtWorkInDB(name, url);
-//                    ArtistImgHandler.this.onDownloadComplete(url);
-//                }
-//            }.execute();
         }
         return null;
     }

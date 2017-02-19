@@ -10,6 +10,6 @@
         android:layout_height="match_parent"
         android:paddingTop="8dp"
         android:paddingBottom="8dp"
-        android:background="@color/windowBackground" />
+        android:background="@color/window_background" />
 
 </RelativeLayout>

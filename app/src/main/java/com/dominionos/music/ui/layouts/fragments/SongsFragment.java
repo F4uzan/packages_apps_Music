@@ -6,6 +6,7 @@ import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -50,7 +51,7 @@ public class SongsFragment extends Fragment {
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         layoutManager.scrollToPosition(0);
         rv.setLayoutManager(layoutManager);
-        rv.setHasFixedSize(true);
+        rv.addItemDecoration(new DividerItemDecoration(rv.getContext(), layoutManager.getOrientation()));
     }
 
     private void setSongList() {
@@ -72,15 +73,13 @@ public class SongsFragment extends Fragment {
                     (MediaStore.Audio.Media.ALBUM_ID);
             int albumColumn = musicCursor.getColumnIndex
                     (MediaStore.Audio.Media.ALBUM);
-            int i = 1;
             do {
                 songList.add(new SongListItem(musicCursor.getLong(idColumn),
                         musicCursor.getString(titleColumn),
                         musicCursor.getString(artistColumn),
                         musicCursor.getString(pathColumn), false,
                         musicCursor.getLong(albumIdColumn),
-                        musicCursor.getString(albumColumn), i));
-                i++;
+                        musicCursor.getString(albumColumn)));
             }
             while (musicCursor.moveToNext());
             Collections.sort(songList, new Comparator<SongListItem>() {
@@ -93,6 +92,10 @@ public class SongsFragment extends Fragment {
         if (musicCursor != null) {
             musicCursor.close();
         }
-        rv.setAdapter(new SongsAdapter(mainView.getContext(), songList));
+        if(songList.size() != 0) {
+            rv.setAdapter(new SongsAdapter(mainView.getContext(), songList));
+        } else {
+            getActivity().findViewById(R.id.no_songs).setVisibility(View.VISIBLE);
+        }
     }
 }

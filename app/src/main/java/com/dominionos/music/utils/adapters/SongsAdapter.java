@@ -29,18 +29,24 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.SimpleItemVi
 
     private final List<SongListItem> items;
     private final Context context;
+    private Intent i;
 
     @NonNull
     @Override
     public String getSectionName(int position) {
-        return items.get(position).getName().substring(0,1);
+        String character = items.get(position).getName().substring(0, 1);
+        if(character.matches("[a-zA-Z]")) {
+            return items.get(position).getName().substring(0,1);
+        } else {
+            return "\u2605";
+        }
     }
 
     final static class SimpleItemViewHolder extends RecyclerView.ViewHolder {
         final TextView title;
         final TextView desc;
-        public final View view;
-        public final ImageView menu;
+        final View view;
+        final ImageView menu;
 
         SimpleItemViewHolder(View itemView) {
             super(itemView);
@@ -54,6 +60,7 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.SimpleItemVi
     public SongsAdapter(Context context, List<SongListItem> items) {
         this.context = context;
         this.items = items;
+        i = new Intent();
     }
 
     @Override
@@ -64,11 +71,9 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.SimpleItemVi
     }
 
     @Override
-    public void onBindViewHolder(SimpleItemViewHolder holder, int position) {
-        position = holder.getAdapterPosition();
-        holder.title.setText(items.get(position).getName());
-        holder.desc.setText(items.get(position).getDesc());
-        final int finalPosition = position;
+    public void onBindViewHolder(final SimpleItemViewHolder holder, int position) {
+        holder.title.setText(items.get(holder.getAdapterPosition()).getName());
+        holder.desc.setText(items.get(holder.getAdapterPosition()).getDesc());
         holder.menu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -78,44 +83,32 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.SimpleItemVi
                     public boolean onMenuItemClick(MenuItem item) {
                         switch (item.getItemId()) {
                             case R.id.menu_play_next:
-                                Intent i = new Intent();
                                 i.setAction(MusicService.ACTION_PLAY_NEXT);
-                                i.putExtra("songId", items.get(finalPosition).getId());
-                                i.putExtra("songPath", items.get(finalPosition).getPath());
-                                i.putExtra("songName", items.get(finalPosition).getName());
-                                i.putExtra("songDesc", items.get(finalPosition).getDesc());
-                                i.putExtra("songAlbumId", items.get(finalPosition).getAlbumId());
-                                i.putExtra("songAlbumName", items.get(finalPosition).getAlbumName());
+                                i.putExtra("song", items.get(holder.getAdapterPosition()));
                                 context.sendBroadcast(i);
                                 return true;
                             case R.id.menu_add_playing:
-                                Intent a = new Intent();
-                                a.setAction(MusicService.ACTION_ADD_SONG);
-                                a.putExtra("songId", items.get(finalPosition).getId());
-                                a.putExtra("songPath", items.get(finalPosition).getPath());
-                                a.putExtra("songName", items.get(finalPosition).getName());
-                                a.putExtra("songDesc", items.get(finalPosition).getDesc());
-                                a.putExtra("songAlbumId", items.get(finalPosition).getAlbumId());
-                                a.putExtra("songAlbumName", items.get(finalPosition).getAlbumName());
-                                context.sendBroadcast(a);
+                                i.setAction(MusicService.ACTION_ADD_SONG);
+                                i.putExtra("song", items.get(holder.getAdapterPosition()));
+                                context.sendBroadcast(i);
                                 return true;
                             case R.id.menu_add_playlist:
-                                addToPlaylist(finalPosition);
+                                addToPlaylist(holder.getAdapterPosition());
                                 return true;
                             case R.id.menu_share:
                                 Intent share = new Intent(Intent.ACTION_SEND);
                                 share.setType("audio/*");
-                                share.putExtra(Intent.EXTRA_STREAM, Uri.parse("file:///" + items.get(finalPosition).getPath()));
+                                share.putExtra(Intent.EXTRA_STREAM, Uri.parse("file:///" + items.get(holder.getAdapterPosition()).getPath()));
                                 context.startActivity(Intent.createChooser(share, context.getString(R.string.share_song)));
                                 return true;
                             case R.id.menu_delete:
-                                File file = new File(items.get(finalPosition).getPath());
+                                File file = new File(items.get(holder.getAdapterPosition()).getPath());
                                 boolean deleted = file.delete();
                                 if (deleted) {
                                     Toast.makeText(context, R.string.song_delete_success, Toast.LENGTH_SHORT).show();
                                     context.getContentResolver().delete(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
-                                            MediaStore.MediaColumns._ID + "='" + items.get(finalPosition).getId() + "'", null);
-                                    notifyItemRemoved(finalPosition);
+                                            MediaStore.MediaColumns._ID + "='" + items.get(holder.getAdapterPosition()).getId() + "'", null);
+                                    notifyItemRemoved(holder.getAdapterPosition());
                                 } else
                                     Toast.makeText(context, R.string.song_delete_fail, Toast.LENGTH_SHORT).show();
                                 return true;
@@ -132,12 +125,7 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.SimpleItemVi
             public void onClick(View v) {
                     Intent a = new Intent();
                     a.setAction(MusicService.ACTION_PLAY_SINGLE);
-                    a.putExtra("songId", items.get(finalPosition).getId());
-                    a.putExtra("songPath", items.get(finalPosition).getPath());
-                    a.putExtra("songName", items.get(finalPosition).getName());
-                    a.putExtra("songDesc", items.get(finalPosition).getDesc());
-                    a.putExtra("songAlbumId", items.get(finalPosition).getAlbumId());
-                    a.putExtra("songAlbumName", items.get(finalPosition).getAlbumName());
+                    a.putExtra("song", items.get(holder.getAdapterPosition()));
                     context.sendBroadcast(a);
             }
         });
@@ -153,4 +141,5 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.SimpleItemVi
     public int getItemCount() {
         return this.items.size();
     }
+
 }

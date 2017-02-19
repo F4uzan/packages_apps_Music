@@ -61,17 +61,8 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.Simple
     public void onBindViewHolder(final SimpleItemViewHolder holder, int position) {
         position = holder.getAdapterPosition();
         holder.gridName.setText(items.get(position).getName());
-        if (items.get(position).getId() == -1) {
-            holder.overflow.setVisibility(View.GONE);
-            holder.mainView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    showNewPlaylistPrompt();
-                }
-            });
-        } else {
-            final int finalPosition = position;
-            holder.overflow.setOnClickListener(new View.OnClickListener() {
+        final int finalPosition = position;
+        holder.overflow.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     PopupMenu popupMenu = new PopupMenu(context, v);
@@ -122,30 +113,6 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.Simple
                     context.startActivity(i);
                 }
             });
-        }
-    }
-
-
-    private void showNewPlaylistPrompt() {
-        new MaterialDialog.Builder(context)
-                .title(R.string.add_playlist)
-                .inputType(InputType.TYPE_CLASS_TEXT)
-                .input(context.getString(R.string.playlist_example), null, new MaterialDialog.InputCallback() {
-
-                    @Override
-                    public void onInput(@NonNull MaterialDialog dialog, CharSequence input) {
-                        if(!input.toString().equals("")) {
-                            MySQLiteHelper helper = new MySQLiteHelper(context);
-                            items.add(items.size() - 1, new Playlist(helper.createNewPlayList(
-                                    input.toString()), input.toString()));
-                            notifyItemInserted(items.size() - 2);
-                        } else {
-                            Toast.makeText(context, R.string.playlist_name_empty_warning, Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                })
-                .positiveText(context.getString(R.string.ok))
-                .negativeText(context.getString(R.string.cancel)).show();
     }
 
     private void showRenamePlaylistPrompt(final int pos) {

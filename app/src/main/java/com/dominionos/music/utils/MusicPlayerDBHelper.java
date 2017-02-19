@@ -53,7 +53,6 @@ public class MusicPlayerDBHelper extends SQLiteOpenHelper {
     private static final String SONG_KEY_FAV = "song_fav";
     private static final String SONG_KEY_PATH = "song_path";
     private static final String SONG_KEY_NAME = "song_name";
-    private static final String SONG_KEY_COUNT = "song_count";
     private static final String SONG_KEY_ALBUM_NAME = "song_album_name";
     private static final String SONG_KEY_PLAYING = "song_playing";
 
@@ -67,7 +66,6 @@ public class MusicPlayerDBHelper extends SQLiteOpenHelper {
         values.put(SONG_KEY_FAV, song.getFav());
         values.put(SONG_KEY_PATH, song.getPath());
         values.put(SONG_KEY_NAME, song.getName());
-        values.put(SONG_KEY_COUNT, song.getCount());
         values.put(SONG_KEY_ALBUM_NAME, song.getAlbumName());
 
         db.insert(TABLE_PLAYBACK, null, values);
@@ -93,10 +91,10 @@ public class MusicPlayerDBHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(query, null);
         if (cursor.moveToFirst()) {
-            do {
-                return getSongFromCursor(cursor);
-            } while (cursor.moveToNext());
+            db.close();
+            return getSongFromCursor(cursor);
         }
+        db.close();
         return null;
     }
 
@@ -118,6 +116,7 @@ public class MusicPlayerDBHelper extends SQLiteOpenHelper {
                 }
             } while (cursor.moveToNext());
         }
+        db.close();
         return firstSong;
     }
 
@@ -139,6 +138,7 @@ public class MusicPlayerDBHelper extends SQLiteOpenHelper {
                 counter++;
             } while (cursor.moveToNext());
         }
+        db.close();
         return songs.get(songs.size() - 1);
     }
 
@@ -147,10 +147,10 @@ public class MusicPlayerDBHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(query, null);
         if (cursor.moveToFirst()) {
-            do {
-                return getSongFromCursor(cursor);
-            } while (cursor.moveToNext());
+            db.close();
+            return getSongFromCursor(cursor);
         }
+        db.close();
         return null;
     }
 
@@ -166,7 +166,7 @@ public class MusicPlayerDBHelper extends SQLiteOpenHelper {
                 songs.add(song);
             } while (cursor.moveToNext());
         }
-
+        db.close();
         return songs;
     }
 
@@ -176,12 +176,14 @@ public class MusicPlayerDBHelper extends SQLiteOpenHelper {
         Cursor cursor = db.rawQuery(query, null);
         int count = cursor.getCount();
         cursor.close();
+        db.close();
         return count;
     }
 
     public void clearPlayingList() {
         SQLiteDatabase db = this.getWritableDatabase();
         db.execSQL("DELETE FROM " + TABLE_PLAYBACK);
+        db.close();
     }
 
 
@@ -198,12 +200,10 @@ public class MusicPlayerDBHelper extends SQLiteOpenHelper {
             values.put(SONG_KEY_FAV, song.getFav());
             values.put(SONG_KEY_PATH, song.getPath());
             values.put(SONG_KEY_NAME, song.getName());
-            values.put(SONG_KEY_COUNT, song.getCount());
             values.put(SONG_KEY_ALBUM_NAME, song.getAlbumName());
             values.put(SONG_KEY_PLAYING, 0);
             db.insert(TABLE_PLAYBACK, null, values);
         }
-        db.close();
     }
 
     public SongListItem getSong(int playingPos) {
@@ -212,9 +212,7 @@ public class MusicPlayerDBHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(query, null);
         if (cursor.moveToFirst()) {
-            do {
-                return getSongFromCursor(cursor);
-            } while (cursor.moveToNext());
+            return getSongFromCursor(cursor);
         }
         return null;
     }
@@ -225,7 +223,7 @@ public class MusicPlayerDBHelper extends SQLiteOpenHelper {
         return new SongListItem(Long.valueOf(cursor.getString(1)),
                 cursor.getString(6), cursor.getString(3),
                 cursor.getString(5), fav, Long.parseLong(cursor.getString(2)),
-                cursor.getString(8), Integer.parseInt(cursor.getString(7)));
+                cursor.getString(8));
     }
 
 }

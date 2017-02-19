@@ -21,7 +21,7 @@
             app:contentScrim="@color/colorPrimary"
             app:layout_scrollFlags="scroll|exitUntilCollapsed|snap">
                 <ImageView
-                    android:id="@+id/activity_album_art"
+                    android:id="@+id/album_art"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:fitsSystemWindows="true"
@@ -45,7 +45,7 @@
                     android:layout_height="92dp"
                     android:background="@color/colorPrimary"
                     android:layout_gravity="bottom"
-                    android:layout_alignBottom="@id/activity_album_art"
+                    android:layout_alignBottom="@id/album_art"
                     app:layout_collapseMode="pin"/>
 
                 <android.support.v7.widget.Toolbar
@@ -64,7 +64,7 @@
         android:paddingTop="8dp"
         android:paddingBottom="8dp"
         android:clipToPadding="false"
-        android:background="@color/windowBackground"
+        android:background="@color/window_background"
         android:numColumns="auto_fit"
         app:fastScrollThumbColor="@color/colorAccent"
         app:fastScrollPopupBgColor="@color/colorAccent"

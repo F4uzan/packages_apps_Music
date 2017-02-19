@@ -51,17 +51,15 @@ public class PlayingSongAdapter extends RecyclerView.Adapter<PlayingSongAdapter.
     }
 
     @Override
-    public void onBindViewHolder(SimpleItemViewHolder holder, int position) {
-        position = holder.getAdapterPosition();
+    public void onBindViewHolder(final SimpleItemViewHolder holder, int position) {
         holder.title.setText(songs.get(position).getName());
         holder.desc.setText(songs.get(position).getDesc());
-        final int finalPosition = position;
         holder.view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent a = new Intent();
                 a.setAction(MusicService.ACTION_PLAY_FROM_PLAYLIST);
-                a.putExtra("playListId", songs.get(finalPosition).getId() + "");
+                a.putExtra("song", songs.get(holder.getAdapterPosition()));
                 context.sendBroadcast(a);
             }
         });
@@ -76,35 +74,35 @@ public class PlayingSongAdapter extends RecyclerView.Adapter<PlayingSongAdapter.
                             case R.id.menu_play_next:
                                 Intent a = new Intent();
                                 a.setAction(MusicService.ACTION_MENU_FROM_PLAYLIST);
-                                a.putExtra("count", finalPosition);
+                                a.putExtra("count", holder.getAdapterPosition());
                                 a.putExtra("action", MusicService.ACTION_MENU_PLAY_NEXT);
                                 context.sendBroadcast(a);
                                 return true;
                             case R.id.menu_remove_playing:
                                 Intent b = new Intent();
                                 b.setAction(MusicService.ACTION_MENU_FROM_PLAYLIST);
-                                b.putExtra("count", finalPosition);
+                                b.putExtra("count", holder.getAdapterPosition());
                                 b.putExtra("action", MusicService.ACTION_MENU_REMOVE_FROM_QUEUE);
                                 context.sendBroadcast(b);
-                                notifyItemRemoved(finalPosition);
+                                notifyItemRemoved(holder.getAdapterPosition());
                                 return true;
                             case R.id.menu_add_playlist:
-                                addToPlaylist(finalPosition);
+                                addToPlaylist(holder.getAdapterPosition());
                                 return true;
                             case R.id.menu_share:
                                 Intent c = new Intent();
                                 c.setAction(MusicService.ACTION_MENU_FROM_PLAYLIST);
-                                c.putExtra("count", (int) songs.get(finalPosition).getId());
+                                c.putExtra("count", (int) songs.get(holder.getAdapterPosition()).getId());
                                 c.putExtra("action", MusicService.ACTION_MENU_SHARE);
                                 context.sendBroadcast(c);
                                 return true;
                             case R.id.menu_delete:
                                 Intent d = new Intent();
                                 d.setAction(MusicService.ACTION_MENU_FROM_PLAYLIST);
-                                d.putExtra("count", finalPosition);
+                                d.putExtra("count", holder.getAdapterPosition());
                                 d.putExtra("action", MusicService.ACTION_MENU_DELETE);
                                 context.sendBroadcast(d);
-                                notifyItemRemoved(finalPosition);
+                                notifyItemRemoved(holder.getAdapterPosition());
                                 return true;
                         }
                         return false;
