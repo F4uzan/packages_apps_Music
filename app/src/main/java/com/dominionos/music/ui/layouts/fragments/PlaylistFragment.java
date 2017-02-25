@@ -18,8 +18,6 @@ import com.dominionos.music.utils.items.Playlist;
 
 import java.util.List;
 
-import uk.co.samuelwall.materialtaptargetprompt.MaterialTapTargetPrompt;
-
 public class PlaylistFragment extends Fragment {
 
     private View mainView;

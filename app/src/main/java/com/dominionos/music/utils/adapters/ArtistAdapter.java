@@ -3,8 +3,6 @@ package com.dominionos.music.utils.adapters;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -123,8 +121,20 @@ public class ArtistAdapter extends RecyclerView.Adapter<ArtistAdapter.SimpleItem
     }
 
     private void setImageToView(String url, final SimpleItemViewHolder holder) {
-        int px = Utils.dpToPx(context, 48);
-        Glide.with(context).load(new File(url)).error(R.drawable.default_artwork_dark).centerCrop().override(px, px).into(holder.artistImg);
+        try {
+            int px = Utils.dpToPx(context, 48);
+            Glide.with(context)
+                    .load(new File(url))
+                    .error(R.drawable.default_art)
+                    .centerCrop()
+                    .override(px, px)
+                    .into(holder.artistImg);
+
+        } catch (NullPointerException e) {
+            Glide.with(context)
+                    .load(R.drawable.default_art)
+                    .into(holder.artistImg);
+        }
     }
 
     @Override

@@ -6,10 +6,12 @@
     android:layout_width="match_parent"
     android:gravity="bottom"
     android:id="@+id/sliding_layout"
-    app:umanoScrollableView="@+id/scroll_view"
+    app:umanoScrollableView="@+id/playing_list"
     app:umanoDragView="@+id/album_art_holder"
     app:umanoParallaxOffset="100dp"
+    app:umanoInitialState="hidden"
     app:umanoPanelHeight="?attr/actionBarSize">
+
     <!-- Main content -->
     <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
@@ -40,6 +42,12 @@
             android:background="@color/window_background"
             app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
+        <com.lapism.searchview.SearchView
+            android:id="@+id/searchView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_behavior="com.lapism.searchview.SearchBehavior" />
+
         <android.support.design.widget.FloatingActionButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -53,211 +61,202 @@
     </android.support.design.widget.CoordinatorLayout>
 
     <!-- Sliding Panel -->
-    <com.sothree.slidinguppanel.SlidingUpPanelLayout
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="bottom"
-        android:id="@+id/playing_list_panel"
-        app:umanoScrollableView="@+id/playing_list"
-        app:umanoParallaxOffset="100dp"
-        app:umanoOverlay="true"
-        app:umanoPanelHeight="275dp">
-        <FrameLayout
+        android:clickable="true"
+        android:orientation="vertical"
+        android:id="@+id/album_art_holder">
+
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:clickable="true"
-            android:orientation="vertical"
-            android:id="@+id/album_art_holder">
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:adjustViewBounds="true"
                 android:id="@+id/album_art"
-                android:src="@drawable/default_artwork_dark"
+                android:src="@drawable/default_art"
                 android:contentDescription="@string/album_art" />
-
             <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                android:background="@color/colorPrimary"
-                android:id="@+id/mini_controller"
-                android:orientation="horizontal">
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_alignParentStart="true"
-                    android:adjustViewBounds="true"
-                    android:id="@+id/mini_album_art"
-                    app:srcCompat="@drawable/default_artwork_dark"
-                    android:contentDescription="@string/album_art" />
-
-                <ImageView
-                    android:id="@+id/player_play_toolbar"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/unbounded_ripple"
-                    android:drawSelectorOnTop="true"
-                    android:layout_centerVertical="true"
-                    android:padding="16dp"
-                    android:layout_alignParentEnd="true"
-                    android:src="@drawable/ic_play"
-                    android:contentDescription="@string/play" />
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_toStartOf="@id/player_play_toolbar"
-                    android:layout_centerVertical="true"
-                    android:paddingStart="16dp"
-                    android:paddingEnd="0dp"
-                    android:orientation="vertical"
-                    android:layout_toEndOf="@id/mini_album_art">
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textSize="16sp"
-                        android:id="@+id/song_name_toolbar"
-                        android:textColor="@android:color/primary_text_dark" />
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textSize="14sp"
-                        android:id="@+id/song_desc_toolbar"
-                        android:textColor="@android:color/secondary_text_dark" />
-                </LinearLayout>
-            </RelativeLayout>
-        </FrameLayout>
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:clickable="true"
-            android:id="@+id/scroll_view">
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/colorAccent"
-                android:id="@+id/control_holder">
-
-                <TextView
-                    android:id="@+id/player_current_time"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="start"
-                    android:padding="16dp"
-                    android:clipToPadding="false"
-                    android:layout_alignParentStart="true"
-                    android:text="@string/default_duration"
-                    android:layout_alignParentTop="true"
-                    android:textColor="@android:color/white"
-                    android:textSize="16sp" />
-
-                <TextView
-                    android:id="@+id/player_total_time"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:padding="16dp"
-                    android:clipToPadding="false"
-                    android:text="@string/default_duration"
-                    android:layout_alignParentTop="true"
-                    android:textColor="@android:color/white"
-                    android:textSize="16sp" />
-
-                <SeekBar
-                    android:id="@+id/player_seekbar"
-                    android:layout_width="wrap_content"
-                    android:layout_centerHorizontal="true"
-                    android:layout_toStartOf="@id/player_total_time"
-                    android:padding="16dp"
-                    android:layout_toEndOf="@id/player_current_time"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentTop="true"
-                    android:progressTint="#FFFFFF"
-                    android:thumbTint="#FFFFFF" />
-
-                <ImageView
-                    android:id="@+id/player_play"
-                    android:layout_width="56dp"
-                    android:layout_height="56dp"
-                    android:background="@drawable/unbounded_ripple"
-                    android:drawSelectorOnTop="true"
-                    android:layout_below="@id/player_seekbar"
-                    android:layout_centerHorizontal="true"
-                    android:layout_margin="16dp"
-                    android:padding="2dp"
-                    android:src="@drawable/ic_play_circle"
-                    android:contentDescription="@string/play" />
-
-                <ImageView
-                    android:id="@+id/player_rewind"
-                    android:layout_width="42dp"
-                    android:layout_height="42dp"
-                    android:background="@drawable/unbounded_ripple"
-                    android:drawSelectorOnTop="true"
-                    android:layout_below="@id/player_seekbar"
-                    android:layout_toStartOf="@id/player_play"
-                    android:layout_marginTop="24dp"
-                    android:layout_marginBottom="24dp"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginEnd="16dp"
-                    android:padding="2dp"
-                    android:src="@drawable/ic_skip_previous"
-                    android:contentDescription="@string/rewind" />
-
-                <ImageView
-                    android:id="@+id/player_forward"
-                    android:layout_width="42dp"
-                    android:layout_height="42dp"
-                    android:background="@drawable/unbounded_ripple"
-                    android:layout_toEndOf="@id/player_play"
-                    android:drawSelectorOnTop="true"
-                    android:layout_marginTop="24dp"
-                    android:layout_marginBottom="24dp"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginEnd="16dp"
-                    android:padding="2dp"
-                    android:layout_below="@id/player_seekbar"
-                    android:src="@drawable/ic_skip_next"
-                    android:contentDescription="@string/fast_forward" />
-
-                <ImageView
-                    android:id="@+id/player_shuffle"
-                    android:layout_width="42dp"
-                    android:layout_height="42dp"
-                    android:background="@drawable/unbounded_ripple"
-                    android:layout_alignParentEnd="true"
-                    android:drawSelectorOnTop="true"
-                    android:layout_margin="24dp"
-                    android:padding="2dp"
-                    android:layout_below="@id/player_seekbar"
-                    android:src="@drawable/ic_shuffle"
-                    android:contentDescription="@string/shuffle" />
-
-                <ImageView
-                    android:id="@+id/player_repeat"
-                    android:layout_width="42dp"
-                    android:layout_height="42dp"
-                    android:background="@drawable/unbounded_ripple"
-                    android:layout_alignParentStart="true"
-                    android:drawSelectorOnTop="true"
-                    android:layout_margin="24dp"
-                    android:padding="2dp"
-                    android:layout_below="@id/player_seekbar"
-                    android:src="@drawable/ic_repeat_all"
-                    android:contentDescription="@string/repeat" />
-
-            </RelativeLayout>
-
-            <android.support.v7.widget.RecyclerView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:paddingTop="8dp"
-                android:paddingBottom="8dp"
-                android:clipToPadding="false"
-                android:background="@color/window_background"
-                android:layout_below="@id/control_holder"
-                android:id="@+id/playing_list"/>
+                android:clickable="true"
+                android:id="@+id/scroll_view">
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/colorAccent"
+                    android:id="@+id/control_holder">
+
+                    <TextView
+                        android:id="@+id/player_current_time"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="start"
+                        android:padding="16dp"
+                        android:clipToPadding="false"
+                        android:layout_alignParentStart="true"
+                        android:text="@string/default_duration"
+                        android:layout_alignParentTop="true"
+                        android:textColor="@android:color/white"
+                        android:textSize="16sp" />
+                    <TextView
+                        android:id="@+id/player_total_time"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:padding="16dp"
+                        android:clipToPadding="false"
+                        android:text="@string/default_duration"
+                        android:layout_alignParentTop="true"
+                        android:textColor="@android:color/white"
+                        android:textSize="16sp" />
+                    <SeekBar
+                        android:id="@+id/player_seekbar"
+                        android:layout_width="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:layout_toStartOf="@id/player_total_time"
+                        android:paddingTop="16dp"
+                        android:paddingBottom="16dp"
+                        android:layout_toEndOf="@id/player_current_time"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentTop="true"
+                        android:progressTint="#FFFFFF"
+                        android:thumbTint="#FFFFFF" />
+                    <ImageView
+                        android:id="@+id/player_play"
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
+                        android:background="@drawable/unbounded_ripple"
+                        android:drawSelectorOnTop="true"
+                        android:layout_below="@id/player_seekbar"
+                        android:layout_centerHorizontal="true"
+                        android:layout_margin="16dp"
+                        android:padding="2dp"
+                        android:src="@drawable/ic_play_circle"
+                        android:contentDescription="@string/play" />
+                    <ImageView
+                        android:id="@+id/player_rewind"
+                        android:layout_width="42dp"
+                        android:layout_height="42dp"
+                        android:background="@drawable/unbounded_ripple"
+                        android:drawSelectorOnTop="true"
+                        android:layout_below="@id/player_seekbar"
+                        android:layout_toStartOf="@id/player_play"
+                        android:layout_marginTop="24dp"
+                        android:layout_marginBottom="24dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="16dp"
+                        android:padding="2dp"
+                        android:src="@drawable/ic_skip_previous"
+                        android:contentDescription="@string/rewind" />
+                    <ImageView
+                        android:id="@+id/player_forward"
+                        android:layout_width="42dp"
+                        android:layout_height="42dp"
+                        android:background="@drawable/unbounded_ripple"
+                        android:layout_toEndOf="@id/player_play"
+                        android:drawSelectorOnTop="true"
+                        android:layout_marginTop="24dp"
+                        android:layout_marginBottom="24dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="16dp"
+                        android:padding="2dp"
+                        android:layout_below="@id/player_seekbar"
+                        android:src="@drawable/ic_skip_next"
+                        android:contentDescription="@string/fast_forward" />
+                    <ImageView
+                        android:id="@+id/player_shuffle"
+                        android:layout_width="42dp"
+                        android:layout_height="42dp"
+                        android:background="@drawable/unbounded_ripple"
+                        android:layout_alignParentEnd="true"
+                        android:drawSelectorOnTop="true"
+                        android:layout_margin="24dp"
+                        android:padding="2dp"
+                        android:layout_below="@id/player_seekbar"
+                        android:src="@drawable/ic_shuffle"
+                        android:contentDescription="@string/shuffle" />
+                    <ImageView
+                        android:id="@+id/player_repeat"
+                        android:layout_width="42dp"
+                        android:layout_height="42dp"
+                        android:background="@drawable/unbounded_ripple"
+                        android:layout_alignParentStart="true"
+                        android:drawSelectorOnTop="true"
+                        android:layout_margin="24dp"
+                        android:padding="2dp"
+                        android:layout_below="@id/player_seekbar"
+                        android:src="@drawable/ic_repeat_all"
+                        android:contentDescription="@string/repeat" />
+                </RelativeLayout>
+
+                <android.support.v7.widget.RecyclerView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:paddingTop="8dp"
+                    android:paddingBottom="8dp"
+                    android:clipToPadding="false"
+                    android:background="@color/window_background"
+                    android:layout_below="@id/control_holder"
+                    android:id="@+id/playing_list"/>
+            </RelativeLayout>
+        </LinearLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/colorPrimary"
+            android:id="@+id/mini_controller"
+            android:orientation="horizontal">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_alignParentStart="true"
+                android:adjustViewBounds="true"
+                android:id="@+id/mini_album_art"
+                android:src="@drawable/default_art"
+                android:contentDescription="@string/album_art" />
+            <ImageView
+                android:id="@+id/player_play_toolbar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/unbounded_ripple"
+                android:drawSelectorOnTop="true"
+                android:layout_centerVertical="true"
+                android:padding="16dp"
+                android:layout_alignParentEnd="true"
+                android:src="@drawable/ic_play"
+                android:contentDescription="@string/play" />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toStartOf="@id/player_play_toolbar"
+                android:layout_centerVertical="true"
+                android:paddingStart="16dp"
+                android:paddingEnd="0dp"
+                android:orientation="vertical"
+                android:layout_toEndOf="@id/mini_album_art">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="16sp"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    android:id="@+id/song_name_toolbar"
+                    android:textColor="@android:color/primary_text_dark" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="14sp"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    android:id="@+id/song_desc_toolbar"
+                    android:textColor="@android:color/secondary_text_dark" />
+            </LinearLayout>
         </RelativeLayout>
-    </com.sothree.slidinguppanel.SlidingUpPanelLayout>
+    </FrameLayout>
 </com.sothree.slidinguppanel.SlidingUpPanelLayout>

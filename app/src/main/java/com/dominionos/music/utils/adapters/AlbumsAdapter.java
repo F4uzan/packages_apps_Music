@@ -81,23 +81,24 @@ public class AlbumsAdapter extends RecyclerView.Adapter<AlbumsAdapter.SimpleItem
 
     @Override
     public void onBindViewHolder(final SimpleItemViewHolder holder, int position) {
-        position = holder.getAdapterPosition();
-        holder.albumName.setText(items.get(position).getName());
+        final int adapterPosition = holder.getAdapterPosition();
+        holder.albumName.setText(items.get(adapterPosition).getName());
         String albumDesc;
-        if(items.get(position).getSongCount() != 1) {
-            albumDesc = items.get(position).getDesc() + " • " + items.get(position).getSongCount() + " " + context.getString(R.string.songs);
+        String desc = items.get(adapterPosition).getDesc();
+        int songCount = items.get(adapterPosition).getSongCount();
+        if(songCount != 1) {
+            albumDesc = desc + " • " + songCount + " " + context.getString(R.string.songs);
         } else {
-            albumDesc = items.get(position).getDesc() + " • " + items.get(position).getSongCount() + " " + context.getString(R.string.song);
+            albumDesc = desc + " • " + songCount + " " + context.getString(R.string.song);
         }
         holder.albumDesc.setText(albumDesc);
         int backCardColor = ResourcesCompat.getColor(context.getResources(), R.color.card_background, null);
-        final int finalPosition = position;
         if (((ColorDrawable) holder.textHolder.getBackground()).getColor() != backCardColor)
             holder.textHolder.setBackgroundColor(backCardColor);
             Glide.with(context)
-                    .load(new File(items.get(position).getArtString()))
+                    .load(new File(items.get(adapterPosition).getArtString()))
                     .asBitmap()
-                    .error(R.drawable.default_artwork_dark)
+                    .error(R.drawable.default_art)
                     .listener(new RequestListener<File, Bitmap>() {
                         @Override
                         public boolean onException(Exception e, File model, Target<Bitmap> target, boolean isFirstResource) {
@@ -132,8 +133,8 @@ public class AlbumsAdapter extends RecyclerView.Adapter<AlbumsAdapter.SimpleItem
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, AlbumActivity.class);
-                intent.putExtra("albumName", items.get(finalPosition).getName());
-                intent.putExtra("albumId", items.get(finalPosition).getId());
+                intent.putExtra("albumName", items.get(adapterPosition).getName());
+                intent.putExtra("albumId", items.get(adapterPosition).getId());
                 String transitionName = "albumArt";
                 Pair albumArt = new Pair<View, String>(holder.albumArt, transitionName);
                 ActivityOptionsCompat options =

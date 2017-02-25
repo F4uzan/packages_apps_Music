@@ -5,23 +5,26 @@
     android:id="@+id/activity_search"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/window_background"
     tools:context="com.dominionos.music.ui.layouts.activity.SearchActivity">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="#FFFFFF"
-        app:layout_scrollFlags="enterAlways"
-        android:theme="@style/ThemeOverlay.AppCompat.Light"
-        android:id="@+id/search_actionbar">
+        android:layout_height="wrap_content"
+        android:background="@color/window_background">
         <android.support.v7.widget.Toolbar
             android:id="@+id/search_toolbar"
             android:layout_width="match_parent"
             app:layout_scrollFlags="enterAlways"
             android:layout_height="?attr/actionBarSize"
-            android:background="#FFFFFF"
-            app:popupTheme="@android:style/ThemeOverlay.Material.Light"/>
+            android:background="@color/window_background"/>
     </android.support.design.widget.AppBarLayout>
+
+    <com.lapism.searchview.SearchView
+        android:id="@+id/searchView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="com.lapism.searchview.SearchBehavior" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/search_list"
@@ -29,7 +32,6 @@
         android:paddingBottom="8dp"
         android:clipToPadding="false"
         android:layout_width="match_parent"
-        android:background="@color/window_background"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         android:layout_height="match_parent" />
 

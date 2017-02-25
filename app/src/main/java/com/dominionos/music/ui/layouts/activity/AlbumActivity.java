@@ -91,7 +91,7 @@ public class AlbumActivity extends AppCompatActivity {
             String imagePath = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Albums.ALBUM_ART));
             Glide.with(AlbumActivity.this)
                     .load(new File(imagePath))
-                    .error(R.drawable.default_artwork_dark)
+                    .error(R.drawable.default_art)
                     .into(albumArt);
         }
         if (cursor != null) {

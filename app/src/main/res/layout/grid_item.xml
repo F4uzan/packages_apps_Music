@@ -20,7 +20,7 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/grid_view_album_art_height"
             android:scaleType="centerCrop"
-            android:src="@drawable/default_artwork_dark"
+            android:src="@drawable/default_art"
             android:transitionName="albumArt"
             android:contentDescription="@string/album_art" />
 
